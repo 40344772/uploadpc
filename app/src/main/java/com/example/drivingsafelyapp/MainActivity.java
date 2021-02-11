@@ -3,6 +3,7 @@ package com.example.drivingsafelyapp;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -26,15 +27,28 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onTranslation(float tx, float ty, float tz) {
 
+                if(tx > 1.0f){
+                    getWindow().getDecorView().setBackgroundColor(Color.RED);
+                }
+                else if(tx < -1.0f){
+                    getWindow().getDecorView().setBackgroundColor(Color.BLUE);
+                }
+
             }
         });
 
         gyroscope.setListener(new gyroscope.Listener() {
             @Override
             public void onRotation(float rx, float ry, float rz) {
+                if(rx > 1.0f){
+                    getWindow().getDecorView().setBackgroundColor(Color.GREEN);
+                }
+                else if(rx < -1.0f){
+                    getWindow().getDecorView().setBackgroundColor(Color.YELLOW);
 
-            }
-        });
+                }
+        }});
+
 
         Button buttonB = (Button)findViewById(R.id.startButton);
 
@@ -48,5 +62,21 @@ public class MainActivity extends AppCompatActivity{
         });
 
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        accelerometer.register();
+        gyroscope.register();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        accelerometer.unregister();
+        gyroscope.unregister();
     }
 }
